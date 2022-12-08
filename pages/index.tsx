@@ -15,7 +15,7 @@ const HomePage: NextPage<Props> = ({ pokemons }) => {
   return (
     <>
       <Layout title="PokeApp">
-        <Grid.Container gap={ 2 } justify='center'>
+        <Grid.Container gap={ 4 } justify='center'>
           {pokemons.map(( pokemon ) => {
             return (
               <PokemonCard 

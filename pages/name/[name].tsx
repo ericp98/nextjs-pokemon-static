@@ -119,7 +119,8 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
       params: { name },
     })),
     // Indica que hacer si se ingresa un id que no esta en la lista, en ´false´ retorna 404
-    fallback: false,
+    // fallback: false,
+    fallback: `blocking`
   };
 };
 
@@ -127,9 +128,21 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { name } = params as { name: string };
 
+  const pokemon = await getPokemonInfo(name)
+
+  // Si no existe un pokemon pasado como parametro, se redirige a la pagina inicial
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
+
   return {
     props: {
-      pokemon: await getPokemonInfo(name)
+      pokemon
     },
   };
 };

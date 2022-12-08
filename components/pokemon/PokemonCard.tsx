@@ -16,8 +16,9 @@ export const PokemonCard: FC<Props> = ({ pokemon }) => {
   }
 
   const { id, img, name } = pokemon;
+
   return (
-    <Grid xs={6} sm={3} md={2} xl={1} key={id}>
+    <Grid xs={6} sm={4} md={3} xl={3} key={id}>
       <Card 
         hoverable 
         clickable

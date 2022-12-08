@@ -108,6 +108,7 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 };
 
 // Retorna los paramertros predefinidos: En este caso son 151 pokemons estaticos
+// Genera los paths de manera estatica en el servidor
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
   const pokemons151 = [...Array(151)].map((value, index) => `${index + 1}`);
 
@@ -116,17 +117,34 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
       params: { id },
     })),
     // Indica que hacer si se ingresa un id que no esta en la lista, en ´false´ retorna 404
-    fallback: false,
+    // fallback: false,
+
+    // Indica que hacer si se ingresa un id que no esta generado de manera estatica, en ´blocking´ hace la busqueda de la nueva pagina
+    fallback: `blocking`
   };
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
 
+  const pokemon =  await getPokemonInfo(id)
+
+  // Si no existe un pokemon pasado como parametro, se redirige a la pagina inicial
+  if (!pokemon) {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false
+      }
+    }
+  }
+
   return {
     props: {
-      pokemon: await getPokemonInfo(id),
+      pokemon
     },
+    // Cada x cantidad de segundos, vuelve a re-generar la pagina
+    revalidate: 86400
   };
 };
 
